@@ -726,7 +726,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bodyColor: {r: 0.9622642, g: 0, b: 0, a: 1}
   metersPerSecond: 1
-  cam: {fileID: 0}
+  cam: {fileID: 330585545}
 --- !u!54 &1390858960
 Rigidbody:
   m_ObjectHideFlags: 0
