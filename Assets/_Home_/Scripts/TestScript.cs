@@ -31,6 +31,8 @@ public class TestScript : MonoBehaviour
             return _rb;
         }
     }
+
+    public Camera cam;
     
     private Vector2 lastMovementInput = Vector2.zero;
     
@@ -48,7 +50,9 @@ public class TestScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //Debug.Log("Start");
+        cam.transform.SetParent(transform);
+        // Esto sirve para buscar un elemento en la escena
+        // FindAnyObjectByType<Camera>();
     }
 
     // Update is called once per frame
