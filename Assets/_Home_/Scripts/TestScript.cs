@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 #if UNITY_EDITOR
 using UnityEditor;
 // Esto es lo que hay que hacer para compilar con cosas de editor
@@ -8,6 +9,7 @@ using UnityEditor;
 [RequireComponent(typeof(MeshRenderer))]
 public class TestScript : MonoBehaviour
 {
+    public Color bodyColor;
     public float metersPerSecond = 2f;
     //private MeshRenderer meshRenderer;
     private MeshRenderer _meshRenderer;
@@ -20,9 +22,19 @@ public class TestScript : MonoBehaviour
         }
     }
 
+    private Rigidbody _rb;
+    private Rigidbody rb{
+        get{
+            if(_rb == null){
+                _rb = GetComponent<Rigidbody>();
+            }
+            return _rb;
+        }
+    }
+    
+    private Vector2 lastMovementInput = Vector2.zero;
     
 
-    public Color bodyColor;
     void Awake()
     {
         // meshRenderer = GetComponent<MeshRenderer>();
@@ -43,11 +55,12 @@ public class TestScript : MonoBehaviour
     void Update()
     {
         ChangeColor();
+        GetMovementInput();
     }
 
     void FixedUpdate()
     {
-        Move();
+        // Move(lastMovementInput);
     }
 
     void OnDisable()
@@ -64,8 +77,40 @@ public class TestScript : MonoBehaviour
         meshRenderer.material.color = bodyColor;
     }
 
-    private void Move()
-    {
-        transform.localPosition += transform.forward * metersPerSecond * Time.fixedDeltaTime;
+    private Vector2 GetMovementInput(){
+       float horizontalInput = Input.GetAxis("Horizontal");
+       float verticalInput = Input.GetAxis("Vertical");
+       Vector2 movementInput = new Vector2(horizontalInput, verticalInput);
+       movementInput = movementInput.normalized;
+       lastMovementInput = movementInput;
+       return movementInput;
     }
+
+    private void Move(Vector2 movementInput)
+    {
+       // TODO: Fix and make it work
+       rb.linearVelocity = new Vector3(
+                                        transform.forward.x * movementInput.x * metersPerSecond,
+                                        rb.linearVelocity.y,
+                                        transform.forward.z * movementInput.y * metersPerSecond
+       );
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log($"OnCollisionEnter with {collision.collider.gameObject.name}", this);
+    }
+    void OnCollisionExit(Collision collision)
+    {
+        Debug.Log($"OnCollisionExit with {collision.collider.gameObject.name}", this);
+    }
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"OnTriggerEnter with {other.gameObject.name}", this);
+    }
+    void OnTriggerExit(Collider other)
+    {
+        Debug.Log($"OnTriggerExit with {other.gameObject.name}", this);
+    }
+
 }
