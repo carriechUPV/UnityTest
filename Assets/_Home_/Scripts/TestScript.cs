@@ -8,6 +8,7 @@ using UnityEditor;
 [RequireComponent(typeof(MeshRenderer))]
 public class TestScript : MonoBehaviour
 {
+    public float metersPerSecond = 2f;
     //private MeshRenderer meshRenderer;
     private MeshRenderer _meshRenderer;
     private MeshRenderer meshRenderer{
@@ -42,7 +43,11 @@ public class TestScript : MonoBehaviour
     void Update()
     {
         ChangeColor();
+    }
 
+    void FixedUpdate()
+    {
+        Move();
     }
 
     void OnDisable()
@@ -57,5 +62,10 @@ public class TestScript : MonoBehaviour
 
     private void ChangeColor(){
         meshRenderer.material.color = bodyColor;
+    }
+
+    private void Move()
+    {
+        transform.localPosition += transform.forward * metersPerSecond * Time.fixedDeltaTime;
     }
 }
